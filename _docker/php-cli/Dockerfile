@@ -1,8 +1,4 @@
-FROM php:8.1-fpm
-
-# Arguments defined in docker-compose.yml
-ARG user
-ARG uid
+FROM php:8.1-cli
 
 RUN apt-get update && apt-get install -y \
     apt-utils \
@@ -18,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY ./_docker/app/php.ini /usr/local/etc/php/conf.d/php.ini
+COPY ./_docker/php-cli/php.ini /usr/local/etc/php/conf.d/php.ini
 
 # Install composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -29,9 +25,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 # Install node
 RUN curl -fsSL https://deb.nodesource.com/setup_21.x | bash - &&\
     apt-get install -y nodejs
-
-# Create system user to run Composer and Artisan Commands
-# RUN useradd -G www-data,root -u $uid -d /home/$user $user
-RUN useradd -G www-data,root $user
 
 WORKDIR /var/www

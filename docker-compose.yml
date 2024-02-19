@@ -7,13 +7,16 @@ services:
       - ./:/var/www/
       - ./_docker/nginx/conf.d/:/etc/nginx/conf.d/
     ports:
-      - "8100:80"
+      - 8100:80
     depends_on:
       - app
     container_name: l10_nginx
 
   app:
     build:
+      args:
+        user: ${USER}
+        uid: 1000
       context: .
       dockerfile: _docker/app/Dockerfile
     volumes:
@@ -22,14 +25,27 @@ services:
       - db
     container_name: l10_app
 
+  php-cli:
+    build:
+      context: .
+      dockerfile: _docker/php-cli/Dockerfile
+    volumes:
+      - ./:/var/www/
+    depends_on:
+      - db
+    container_name: l10_php-cli
+    tty: true
+
   db:
     image: mysql:8.0
     restart: always
     volumes:
       - ./_db/mysql:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: laravel
+      MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     container_name: l10_db
 
