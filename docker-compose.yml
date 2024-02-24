@@ -59,3 +59,14 @@ services:
     depends_on:
       - db
     container_name: l10_phpmyadmin
+
+  rabbitmq:
+    image: rabbitmq:3.13.0-management-alpine
+    restart: always
+    environment:
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 524288000
+    volumes:
+      - ./_rabbitmq:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+    container_name: l10_rabbit

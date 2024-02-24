@@ -7,11 +7,11 @@
 
 Vite заменён на Mix
 
+Laravel Debugbar
+
 Composer и node в app контейнере
 
-phpMyAdmin
-
-Laravel Debugbar
+phpMyAdmin, RabbitMQ
 
 ---
 
